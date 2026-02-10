@@ -1,4 +1,0 @@
-
-> @lc/mcp-server@ typecheck /Users/hemant/Personal code/lc-ts-agent/apps/mcp-server
-> tsc -p tsconfig.json --noEmit
-

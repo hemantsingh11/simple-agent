@@ -1,0 +1,21 @@
+{
+  "name": "@lc/cli",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "start": "node --enable-source-maps src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "echo \"no build step\"",
+    "mcp:dev": "tsx src/mcp_client.ts"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.15",
+    "@langchain/openai": "^1.2.2",
+    "@lc/shared": "workspace:*",
+    "dotenv": "^17.2.3",
+    "langchain": "^1.2.10",
+    "zod": "^4.3.5"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "lc-ts-agent",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.28.1",
+  "scripts": {
+    "dev": "turbo dev",
+    "typecheck": "turbo typecheck",
+    "build": "turbo build",
+    "start": "pnpm --filter @lc/cli dev"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "tsx": "^4.21.0",
+    "turbo": "^2.7.5",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@langchain/mcp-adapters": "^1.1.1",
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "express": "^5.2.1",
+    "zod": "^4.3.5"
+  }
+}

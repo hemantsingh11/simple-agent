@@ -1,7 +1,9 @@
 
 import { MultiServerMCPClient } from "@langchain/mcp-adapters";
-import { createAgent } from "langchain";
 import { ChatOpenAI } from "@langchain/openai";
+import { HumanMessage, isAIMessage } from "@langchain/core/messages";
+import { MessagesAnnotation, START, StateGraph } from "@langchain/langgraph";
+import { ToolNode, toolsCondition } from "@langchain/langgraph/prebuilt";
 
 
 import dotenv from "dotenv";
@@ -44,15 +46,26 @@ async function main() {
 
 
   const tools = await client.getTools();
+  const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 }).bindTools(
+    tools
+  );
 
-  const agent = createAgent({
-    model: new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 }),
-    tools,
-  });
+  const callModel = async (state: typeof MessagesAnnotation.State) => {
+    const response = await model.invoke(state.messages);
+    return { messages: [response] };
+  };
 
-  const result = await agent.invoke({
+  const graph = new StateGraph(MessagesAnnotation)
+    .addNode("model", callModel)
+    .addNode("tools", new ToolNode(tools))
+    .addEdge(START, "model")
+    .addConditionalEdges("model", toolsCondition)
+    .addEdge("tools", "model")
+    .compile();
+
+  const result = await graph.invoke({
     messages: [
-      { role: "user", content: "what is hapening with nvidia openai and ai bubble." },  // What is the current date time? Use tools if needed.
+      new HumanMessage("what is hapening with nvidia openai and ai bubble."),
     ],
   });
 
@@ -63,13 +76,25 @@ async function main() {
   const messages = Array.isArray(anyResult?.messages) ? anyResult.messages : [];
 
   for (const m of messages) {
-    const toolCalls =
-      m?.tool_calls ??
-      m?.additional_kwargs?.tool_calls ??
-      [];
+    const toolCalls = isAIMessage(m)
+      ? m.tool_calls ?? m.additional_kwargs?.tool_calls ?? []
+      : [];
 
     for (const tc of toolCalls) {
-      const name = tc?.name ?? tc?.function?.name;
+      let name: string | undefined;
+      if (tc && typeof tc === "object") {
+        if ("name" in tc && typeof tc.name === "string") {
+          name = tc.name;
+        } else if (
+          "function" in tc &&
+          tc.function &&
+          typeof tc.function === "object" &&
+          "name" in tc.function &&
+          typeof tc.function.name === "string"
+        ) {
+          name = tc.function.name;
+        }
+      }
       if (name) console.log(`[tool call] ${name}`);
     }
   }

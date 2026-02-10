@@ -1,5 +1,4 @@
 
-
 > @lc/shared@0.0.0 typecheck /Users/hemant/Personal code/lc-ts-agent/packages/shared
 > tsc -p tsconfig.json
 

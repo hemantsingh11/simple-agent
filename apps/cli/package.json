@@ -4,14 +4,15 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "tsx src/main.ts",
-    "start": "node --enable-source-maps src/main.ts",
+    "dev": "tsx src/mcp_client.ts",
+    "start": "node --enable-source-maps src/mcp_client.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "build": "echo \"no build step\"",
-    "mcp:dev": "tsx src/mcp_client.ts"
+    "build": "echo \"no build step\""
   },
   "dependencies": {
     "@langchain/core": "^1.1.15",
+    "@langchain/langgraph": "^1.0.2",
+    "@langchain/mcp-adapters": "^1.1.1",
     "@langchain/openai": "^1.2.2",
     "@lc/shared": "workspace:*",
     "dotenv": "^17.2.3",

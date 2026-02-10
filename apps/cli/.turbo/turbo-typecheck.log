@@ -1,5 +1,4 @@
 
-
 > @lc/cli@0.0.0 typecheck /Users/hemant/Personal code/lc-ts-agent/apps/cli
 > tsc -p tsconfig.json
 

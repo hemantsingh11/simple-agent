@@ -1,0 +1,8 @@
+{
+  "node_version": "24",
+  "dependencies": ["."],
+  "graphs": {
+    "mcp_agent": "./src/agent.ts:agent"
+  },
+  "env": ".env"
+}

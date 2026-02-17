@@ -1,5 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+export type { TopicNewsInsert, TopicNewsRepository, TopicNewsRow } from "./topicNews.js";
+export { createTopicNewsRepository } from "./topicNews.js";
 
 export type CheckpointerBackend = "sqlite" | "memory";
 

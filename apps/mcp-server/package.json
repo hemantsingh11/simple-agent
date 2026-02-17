@@ -10,6 +10,7 @@
     "@types/express": "^5.0.6"
   },
   "dependencies": {
+    "@lc/persistence": "workspace:*",
     "dotenv": "^17.2.3",
     "node-fetch": "^3.3.2"
   }

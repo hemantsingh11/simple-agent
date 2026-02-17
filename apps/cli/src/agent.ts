@@ -33,6 +33,14 @@ interface AgentRuntime {
   client: MultiServerMCPClient;
 }
 
+const REQUIRED_DB_TOOLS = [
+  "search_web",
+  "save_to_db",
+  "get_from_db",
+  "get_all_from_db",
+  "get_by_id",
+] as const;
+
 function parseArgs(argv: string[]) {
   const values: Record<string, string> = {};
   for (let i = 0; i < argv.length; i += 1) {
@@ -78,6 +86,18 @@ async function createAgentRuntime(options: AgentOptions = {}): Promise<AgentRunt
   });
 
   const tools = await client.getTools();
+  const toolNames = new Set(
+    tools
+      .map((tool: any) => (typeof tool?.name === "string" ? tool.name : ""))
+      .filter(Boolean)
+  );
+  const missingTools = REQUIRED_DB_TOOLS.filter((name) => !toolNames.has(name));
+  if (missingTools.length > 0) {
+    throw new Error(
+      `Missing required MCP tools: ${missingTools.join(", ")}. Restart MCP server with: pnpm --filter @lc/mcp-server dev`
+    );
+  }
+
   const checkpointer = await createCheckpointer({
     backend: options.backend ?? "sqlite",
     sqlitePath: options.sqlitePath ?? defaultSqlitePath(),
